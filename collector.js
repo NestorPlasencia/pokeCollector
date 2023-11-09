@@ -240,5 +240,7 @@ class Collector {
   };
 }
 
+
+
 // Exporta la clase para que pueda ser utilizada fuera de la librería
-export { Collector };
+window.Collector = Collector;
