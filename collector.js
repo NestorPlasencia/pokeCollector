@@ -102,7 +102,7 @@ class Collector {
       body: null,
       method: "GET",
     };
-    const response = await fetchData(url, config);
+    const response = await Collector.fetchData(url, config);
     return response;
   };
 
@@ -117,44 +117,44 @@ class Collector {
       method: "POST",
     };
     console.log(config);
-    const response = await fetchData(url, config);
+    const response = await Collector.fetchData(url, config);
     return response;
   };
 
   static getSets = async (collectionId = Collector.COLLECTOR_USER_ID) => {
     const pokemonId = 3;
     const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/category/${pokemonId}?collectionId=${collectionId}`;
-    const sets = await getData(url);
+    const sets = await Collector.getData(url);
     return sets.sets;
   };
 
   static getCollections = async () => {
     const url = `${Collector.COLLECTOR_API_URL}/accounts/${Collector.COLLECTOR_USER_ID}/collections`;
-    const collections = await getData(url);
+    const collections = await Collector.getData(url);
     return collections.data;
   };
 
   static getCollection = async (collectionId) => {
     const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products?searchString=&offset=0&limit=10000&filters=&sortType=&sortOrder=&groupId=&collectionId=${collectionId}`;
-    const collection = await getData(url);
+    const collection = await Collector.getData(url);
     return convertArrKeysToNumber(collection.data);
   };
 
   static getSet = async (setId) => {
     const url = `${Collector.COLLECTOR_API_URL}/catalog?searchString=&offset=0&limit=10000&filters=cards&sortType=&sortOrder=&groupId=${setId}`;
-    const set = await getData(url);
+    const set = await Collector.getData(url);
     return convertArrKeysToNumber(set.data);
   };
 
   static getCardFromCollection = async (cardId, collectionId) => {
     const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products/${cardId}?collectionId=${collectionId}&currency=USD&details=false`;
-    const card = await getData(url);
+    const card = await Collector.getData(url);
     return convertKeysToNumber(card.data);
   };
 
   static getCollectionsCardsById = async (collectionsId) => {
     const collectionsPromises = collectionsId.map(async (collectionId) => {
-      const response = await getCollection(collectionId);
+      const response = await Collector.getCollection(collectionId);
       return response;
     });
     const collectionsArrays = await Promise.all(collectionsPromises);
@@ -164,7 +164,7 @@ class Collector {
 
   static getSetsCardsById = async (setsIds) => {
     const setsPromises = setsIds.map(async (setId) => {
-      const response = await getSet(setId);
+      const response = await Collector.getSet(setId);
       return response;
     });
     const setsArrays = await Promise.all(setsPromises);
@@ -174,7 +174,10 @@ class Collector {
 
   static getCardsInCollectionId = async (cardsIds, collectionId) => {
     const cardsPromises = cardsIds.map(async (cardId) => {
-      const response = await getCardFromCollection(cardId, collectionId);
+      const response = await Collector.getCardFromCollection(
+        cardId,
+        collectionId
+      );
       return response;
     });
     const cardsArrays = await Promise.all(cardsPromises);
@@ -189,7 +192,7 @@ class Collector {
     quantity
   ) => {
     const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products/${cardId}?collectionId=${collectionId}`;
-    const card = await setData(
+    const card = await Collector.setData(
       url,
       JSON.stringify({
         gradeId: null,
@@ -197,11 +200,11 @@ class Collector {
         subType,
       })
     );
-    return convertKeysToNumber(card);
+    return Collector.convertKeysToNumber(card);
   };
 
   static setCardIdToCollection = async (cardId, collectionId, subType) => {
-    const response = await setCardQuantityToCollection(
+    const response = await Collector.setCardQuantityToCollection(
       cardId,
       collectionId,
       subType,
@@ -228,9 +231,10 @@ class Collector {
     subType,
     quantityToAdd = 1
   ) => {
-    const card = await getCardFromCollection(cardId, collectionId);
-    const quantity = getQuantityFromCard(card, subType) + quantityToAdd;
-    const response = await setCardQuantityToCollection(
+    const card = await Collector.getCardFromCollection(cardId, collectionId);
+    const quantity =
+      Collector.getQuantityFromCard(card, subType) + quantityToAdd;
+    const response = await Collector.setCardQuantityToCollection(
       cardId,
       collectionId,
       subType,
@@ -239,8 +243,6 @@ class Collector {
     return response;
   };
 }
-
-
 
 // Exporta la clase para que pueda ser utilizada fuera de la librería
 window.Collector = Collector;
