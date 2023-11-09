@@ -7,11 +7,11 @@ class Collector {
   static COLLECTOR_API_URL =
     "https://9qrtyiwk58.execute-api.us-east-1.amazonaws.com";
 
-  setToken(collector_token) {
+  static setToken(collector_token) {
     this.COLLECTOR_TOKEN = collector_token;
   }
 
-  setUserId(collector_user_id) {
+  static setUserId(collector_user_id) {
     this.COLLECTOR_USER_ID = collector_user_id;
   }
 
