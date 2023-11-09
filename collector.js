@@ -14,11 +14,11 @@ class Collector {
   };
 
   static setToken(collector_token) {
-    this.COLLECTOR_TOKEN = collector_token;
+    Collector.COLLECTOR_TOKEN = collector_token;
   }
 
   static setUserId(collector_user_id) {
-    this.COLLECTOR_USER_ID = collector_user_id;
+    Collector.COLLECTOR_USER_ID = collector_user_id;
   }
 
   // Utilidades
