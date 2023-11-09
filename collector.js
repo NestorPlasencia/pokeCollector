@@ -7,6 +7,12 @@ class Collector {
   static COLLECTOR_API_URL =
     "https://9qrtyiwk58.execute-api.us-east-1.amazonaws.com";
 
+  static COMMON_HEADERS = {
+    accept: "*/*",
+    authorization: Collector.COLLECTOR_TOKEN,
+    "content-type": "application/json",
+  };
+
   static setToken(collector_token) {
     this.COLLECTOR_TOKEN = collector_token;
   }
@@ -16,12 +22,8 @@ class Collector {
   }
 
   // Utilidades
-  static fetchData = async (url, config) => {
-    const response = await fetch(url, config);
-    const jsonResponse = await response.json();
-    return jsonResponse;
-  };
 
+  // Compara dos objetos que sean idénticos
   static deepEqual = (object1, object2) => {
     const isObject = (object) => {
       return object != null && typeof object === "object";
@@ -47,6 +49,7 @@ class Collector {
     return true;
   };
 
+  // Devuelve los elementos del array 2 que no se presenten en el array 1, basado en la keyToCompare
   static arrayDifferences = (arrayOne, arrayTwo, keyToCompare = null) => {
     let arrayDifference = []; // elements in groupTwo but no in arrayOne
     if (keyToCompare) {
@@ -56,105 +59,96 @@ class Collector {
       );
     } else {
       arrayDifference = arrayTwo.filter(
-        (e2) => !arrayOne.some((e1) => deepEqual(e2, e1))
+        (e2) => !arrayOne.some((e1) => Collector.deepEqual(e2, e1))
       );
     }
     return arrayDifference;
   };
 
+  // Redondea un numero a dos decimales
   static round2Dec = (num) => {
     return Math.round(num * 100) / 100;
   };
 
+  // Calcula el porcentaje redondeado a dos decimales
   static calcPercentage = (part, total) => {
-    return round2Dec((part / total) * 100);
+    return Collector.round2Dec((part / total) * 100);
   };
 
+  // Convierte y redondea keys numéricas de un objeto
   static convertKeysToNumber = (o) => {
     Object.keys(o).forEach((k) => {
       if (!isNaN(o[k])) {
         if (Number.isInteger(o[k])) {
           o[k] = Number(o[k]);
         } else {
-          o[k] = round2Dec(Number(o[k]));
+          o[k] = Collector.round2Dec(Number(o[k]));
         }
       }
     });
     return o;
   };
 
+  // Convierte y redondea keys numéricas de un array de objetos
   static convertArrKeysToNumber = (a) => {
-    return a.map((o) => convertKeysToNumber(o));
+    return a.map((o) => Collector.convertKeysToNumber(o));
   };
 
+  // Suma los valores de una key numérica en un array de objetos
   static sumNumericKey = (array, key) => {
-    return round2Dec(array.reduce((a, b) => a + b[key], 0));
+    return Collector.round2Dec(array.reduce((a, b) => a + b[key], 0));
   };
 
-  // Métodos
-  static getData = async (url) => {
-    const config = {
-      headers: {
-        accept: "*/*",
-        authorization: Collector.COLLECTOR_TOKEN,
-        "content-type": "application/json",
-      },
-      body: null,
-      method: "GET",
+  // REQUEST GENÉRICOS
+
+  static buildConfig = (method, body = null) => {
+    return {
+      headers: Collector.COMMON_HEADERS,
+      body,
+      method,
     };
+  };
+
+  static fetchData = async (url, config) => {
+    const response = await fetch(url, config);
+    const jsonResponse = await response.json();
+    return jsonResponse;
+  };
+
+  static getData = async (url) => {
+    const config = Collector.buildConfig("GET");
     const response = await Collector.fetchData(url, config);
     return response;
   };
 
   static setData = async (url, data) => {
-    const config = {
-      headers: {
-        accept: "*/*",
-        authorization: Collector.COLLECTOR_TOKEN,
-        "content-type": "application/json",
-      },
-      body: data,
-      method: "POST",
-    };
-    console.log(config);
+    const config = Collector.buildConfig("POST", data);
     const response = await Collector.fetchData(url, config);
     return response;
   };
 
-  static getSets = async (collectionId = Collector.COLLECTOR_USER_ID) => {
-    const pokemonId = 3;
-    const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/category/${pokemonId}?collectionId=${collectionId}`;
-    const sets = await Collector.getData(url);
-    return sets.sets;
-  };
+  // COLECCIONES
 
-  static getCollections = async () => {
+  // OBTENER CARTAS E INFORMACIÓN DE COLECCIONES
+
+  // Lista de todas las colecciones
+  static getCollectionsList = async () => {
     const url = `${Collector.COLLECTOR_API_URL}/accounts/${Collector.COLLECTOR_USER_ID}/collections`;
     const collections = await Collector.getData(url);
     return collections.data;
   };
 
-  static getCollection = async (collectionId) => {
+  // Trae todas las cartas de una colección
+  static getCardsFromCollection = async (collectionId) => {
     const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products?searchString=&offset=0&limit=10000&filters=&sortType=&sortOrder=&groupId=&collectionId=${collectionId}`;
     const collection = await Collector.getData(url);
     return convertArrKeysToNumber(collection.data);
   };
 
-  static getSet = async (setId) => {
-    const url = `${Collector.COLLECTOR_API_URL}/catalog?searchString=&offset=0&limit=10000&filters=cards&sortType=&sortOrder=&groupId=${setId}`;
-    const set = await Collector.getData(url);
-    return convertArrKeysToNumber(set.data);
-  };
-
-  static getCardFromCollection = async (cardId, collectionId) => {
-    const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products/${cardId}?collectionId=${collectionId}&currency=USD&details=false`;
-    const card = await Collector.getData(url);
-    return convertKeysToNumber(card.data);
-  };
-
+  // Trae las cartas de de varias colecciones
   static getCollectionsCardsById = async (collectionsId) => {
     const collectionsPromises = collectionsId.map(async (collectionId) => {
-      const response = await Collector.getCollection(collectionId);
+      const response = await Collector.getCardsFromCollection(collectionId);
       return response;
     });
     const collectionsArrays = await Promise.all(collectionsPromises);
@@ -162,16 +156,14 @@ class Collector {
     return collectionsCards;
   };
 
-  static getSetsCardsById = async (setsIds) => {
-    const setsPromises = setsIds.map(async (setId) => {
-      const response = await Collector.getSet(setId);
-      return response;
-    });
-    const setsArrays = await Promise.all(setsPromises);
-    const setsCards = setsArrays.flat();
-    return setsCards;
+  // Trae una carta especifica de una colección
+  static getCardFromCollection = async (cardId, collectionId) => {
+    const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products/${cardId}?collectionId=${collectionId}&currency=USD&details=false`;
+    const card = await Collector.getData(url);
+    return convertKeysToNumber(card.data);
   };
 
+  // Trae varias cartas de una colección
   static getCardsInCollectionId = async (cardsIds, collectionId) => {
     const cardsPromises = cardsIds.map(async (cardId) => {
       const response = await Collector.getCardFromCollection(
@@ -185,6 +177,9 @@ class Collector {
     return cards;
   };
 
+  // AGREGAR O ASIGNAR CARTAS A COLECCIONES
+
+  // Asigna una cantidad determinada de una carta de determinado tipo a una colección
   static setCardQuantityToCollection = async (
     cardId,
     collectionId,
@@ -203,6 +198,7 @@ class Collector {
     return Collector.convertKeysToNumber(card);
   };
 
+  // Asigna una unidad de una carta de determinado tipo a una colección
   static setCardIdToCollection = async (cardId, collectionId, subType) => {
     const response = await Collector.setCardQuantityToCollection(
       cardId,
@@ -213,6 +209,7 @@ class Collector {
     return response;
   };
 
+  // Regresa la cantidad de un tipo de una carta en una colección
   static getQuantityFromCard = (card, subType) => {
     let quantity = 0;
     if (card.ungraded_sub_types != 0) {
@@ -225,6 +222,7 @@ class Collector {
     return quantity;
   };
 
+  // Agrega una cantidad determinada de una carta de determinado tipo a las ya existes en una colección
   static addCardIdToCollection = async (
     cardId,
     collectionId,
@@ -241,6 +239,34 @@ class Collector {
       quantity
     );
     return response;
+  };
+
+  // SETS
+
+  // Lista de todos los sets
+  static getSetsList = async (collectionId = Collector.COLLECTOR_USER_ID) => {
+    const pokemonId = 3;
+    const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/category/${pokemonId}?collectionId=${collectionId}`;
+    const sets = await Collector.getData(url);
+    return sets.sets;
+  };
+
+  // Trae todas las cartas de un set
+  static getCardsFromSet = async (setId) => {
+    const url = `${Collector.COLLECTOR_API_URL}/catalog?searchString=&offset=0&limit=10000&filters=cards&sortType=&sortOrder=&groupId=${setId}`;
+    const set = await Collector.getData(url);
+    return Collector.convertArrKeysToNumber(set.data);
+  };
+
+  // Trae las cartas de de varios sets
+  static getSetsCardsById = async (setsIds) => {
+    const setsPromises = setsIds.map(async (setId) => {
+      const response = await Collector.getCardsFromSet(setId);
+      return response;
+    });
+    const setsArrays = await Promise.all(setsPromises);
+    const setsCards = setsArrays.flat();
+    return setsCards;
   };
 }
 
