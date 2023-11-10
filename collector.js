@@ -442,26 +442,28 @@ class Collector {
   ];
 
   // Devuelve verdadero si la carta tiene un subtipo Normal
-  static isNormalCard = (card) => {
+  static hasNormalCard = (card) => {
     return card.ungraded_sub_types.some((subType) =>
       Collector.NORMAL_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
     );
   };
 
   // Devuelve verdadero si la carta tiene un subtipo Reverse
-  static isReverseCard = (card) => {
+  static hasReverseCard = (card) => {
     return card.ungraded_sub_types.some((subType) =>
       Collector.REVERSE_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
     );
   };
 
-  static hasNormalCard = (card) => {
+  // Devuelve verdadero si la carta existe en subtipo Normal
+  static existNormalCard = (card) => {
     return card.unique_sub_type_groups.some((subType) =>
     Collector.NORMAL_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
   );
   }
-
-  static hasReverseCard = (card) => {
+  
+  // Devuelve verdadero si la carta existe en subtipo Normal
+  static existReverseCard = (card) => {
     return card.unique_sub_type_groups.some((subType) =>
     Collector.REVERSE_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
   );
