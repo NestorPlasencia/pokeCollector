@@ -455,9 +455,22 @@ class Collector {
     );
   };
 
+  static hasNormalCard = (card) => {
+    return card.unique_sub_type_groups.some((subType) =>
+    Collector.NORMAL_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
+  );
+  }
+
+  static hasReverseCard = (card) => {
+    return card.unique_sub_type_groups.some((subType) =>
+    Collector.REVERSE_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
+  );
+  }
+
+
   // Devuelve verdadero si la carta es de semiSet
   static isSemiSetCard = (card) => {
-    return Collector.SEMI_SETS_RARITIES.includes(card.rarity);
+    return Collector.SEMI_SETS_RARITIES.includes(card.rarity) && ;
   };
 
   // Devuelve verdadero si la carta es un Hit
