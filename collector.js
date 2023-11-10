@@ -314,7 +314,7 @@ class Collector {
     cards.forEach((card) => {
       Collector.CARDS_SUBTYPES.forEach(async (subType) => {
         const response = await Collector.setCardQuantityToCollection(
-          card.Id,
+          card.product_id,
           collectionId,
           subType,
           0
