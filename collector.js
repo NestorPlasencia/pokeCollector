@@ -153,7 +153,7 @@ class Collector {
   static getCardsFromCollection = async (collectionId) => {
     const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products?searchString=&offset=0&limit=10000&filters=&sortType=&sortOrder=&groupId=&collectionId=${collectionId}`;
     const collection = await Collector.getData(url);
-    return convertArrKeysToNumber(collection.data);
+    return Collector.convertArrKeysToNumber(collection.data);
   };
 
   // Trae las cartas de de varias colecciones
