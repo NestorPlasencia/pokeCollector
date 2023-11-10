@@ -458,21 +458,20 @@ class Collector {
   // Devuelve verdadero si la carta existe en subtipo Normal
   static existNormalCard = (card) => {
     return card.unique_sub_type_groups.some((subType) =>
-    Collector.NORMAL_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
-  );
-  }
-  
+      Collector.NORMAL_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
+    );
+  };
+
   // Devuelve verdadero si la carta existe en subtipo Normal
   static existReverseCard = (card) => {
     return card.unique_sub_type_groups.some((subType) =>
-    Collector.REVERSE_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
-  );
-  }
-
+      Collector.REVERSE_SEMI_SET_SUBTYPE.includes(subType.product_sub_type)
+    );
+  };
 
   // Devuelve verdadero si la carta es de semiSet
   static isSemiSetCard = (card) => {
-    return Collector.SEMI_SETS_RARITIES.includes(card.rarity) && ;
+    return Collector.SEMI_SETS_RARITIES.includes(card.rarity);
   };
 
   // Devuelve verdadero si la carta es un Hit
