@@ -308,6 +308,29 @@ class Collector {
     return response;
   };
 
+  // Elimina todas las cartas de una colección
+  static deleteCardsFromCollection = async (collectionId) => {
+    const cards = await Collector.getCardsFromCollection(collectionId);
+    cards.forEach((card) => {
+      Collector.CARDS_SUBTYPES.forEach(async (subType) => {
+        const response = await Collector.setCardQuantityToCollection(
+          card.Id,
+          collectionId,
+          subType,
+          0
+        );
+        console.log(response);
+      });
+    });
+  };
+
+  // Elimina todas las cartas de una colección dando el nombre de la colección
+  static deleteCardsFromCollectionName = async (collectionName) => {
+    const collectionId =
+      Collector.getCollectionIdFromCollectionName(collectionName);
+    await deleteCardsFromCollection(collectionId);
+  };
+
   // SETS
 
   // Lista de todos los sets
@@ -404,6 +427,11 @@ class Collector {
   static NORMAL_SEMI_SET_SUBTYPE = ["Normal", "Holofoil"];
 
   static REVERSE_SEMI_SET_SUBTYPE = ["Reverse Holofoil"];
+
+  static CARDS_SUBTYPES = [
+    ...Collector.NORMAL_SEMI_SET_SUBTYPE,
+    ...Collector.REVERSE_SEMI_SET_SUBTYPE,
+  ];
 
   static SEMI_SETS_RARITIES = [
     "Common",
