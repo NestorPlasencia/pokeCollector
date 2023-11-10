@@ -328,7 +328,7 @@ class Collector {
   static deleteCardsFromCollectionName = async (collectionName) => {
     const collectionId =
       Collector.getCollectionIdFromCollectionName(collectionName);
-    await deleteCardsFromCollection(collectionId);
+    await Collector.deleteCardsFromCollection(collectionId);
   };
 
   // SETS
