@@ -171,7 +171,7 @@ class Collector {
   static getCardFromCollection = async (cardId, collectionId) => {
     const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products/${cardId}?collectionId=${collectionId}&currency=USD&details=false`;
     const card = await Collector.getData(url);
-    return convertKeysToNumber(card.data);
+    return Collector.convertKeysToNumber(card.data);
   };
 
   // Trae varias cartas de una colección
