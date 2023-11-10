@@ -3,7 +3,6 @@
 class Collector {
   // Constantes
   static _COLLECTOR_TOKEN = null;
-  static _COLLECTOR_USER_ID = null;
 
   static get COLLECTOR_TOKEN() {
     return Collector._COLLECTOR_TOKEN;
@@ -13,12 +12,34 @@ class Collector {
     Collector._COLLECTOR_TOKEN = collector_token;
   }
 
+  static _COLLECTOR_USER_ID = null;
+
   static get COLLECTOR_USER_ID() {
     return Collector._COLLECTOR_USER_ID;
   }
 
   static set COLLECTOR_USER_ID(collector_user_id) {
     Collector._COLLECTOR_USER_ID = collector_user_id;
+  }
+
+  static _COLLECTIONS_LIST = [];
+
+  static get COLLECTIONS_LIST() {
+    return Collector._COLLECTIONS_LIST;
+  }
+
+  static set COLLECTIONS_LIST(collections_list) {
+    Collector._COLLECTIONS_LIST = collections_list;
+  }
+
+  static _SETS_LIST = [];
+
+  static get SETS_LIST() {
+    return Collector._SETS_LIST;
+  }
+
+  static set SETS_LIST(sets_list) {
+    Collector._SETS_LIST = sets_list;
   }
 
   static COLLECTOR_API_URL =
@@ -149,6 +170,11 @@ class Collector {
     return collections.data;
   };
 
+  // Carga la propiedad Collections List
+  static loadCollections = async () => {
+    Collector._COLLECTIONS_LIST = await Collector.getCollectionsList();
+  };
+
   // Trae todas las cartas de una colección
   static getCardsFromCollection = async (collectionId) => {
     const url = `${Collector.COLLECTOR_API_URL}/collections/${Collector.COLLECTOR_USER_ID}/products?searchString=&offset=0&limit=10000&filters=&sortType=&sortOrder=&groupId=&collectionId=${collectionId}`;
@@ -262,6 +288,11 @@ class Collector {
     return sets.sets;
   };
 
+  // Carga la propiedad Set List
+  static loadSets = async () => {
+    Collector._SETS_LIST = await Collector.getSetsList();
+  };
+
   // Trae todas las cartas de un set
   static getCardsFromSet = async (setId) => {
     const url = `${Collector.COLLECTOR_API_URL}/catalog?searchString=&offset=0&limit=10000&filters=cards&sortType=&sortOrder=&groupId=${setId}`;
@@ -279,6 +310,223 @@ class Collector {
     const setsCards = setsArrays.flat();
     return setsCards;
   };
+
+  static _SET_NAMES_DICTIONARY = [
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "Celebrations: Classic Collection",
+      CollectrSetName: "Celebrations: Classic Collection",
+      BoosterSetName: "Celebrations",
+      TCGPlayerCode: "[CCC]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "Champion's Path",
+      CollectrSetName: "Champion's Path",
+      BoosterSetName: "Champion's Path",
+      TCGPlayerCode: "[CHP]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "Celebrations",
+      CollectrSetName: "Celebrations",
+      BoosterSetName: "Celebrations",
+      TCGPlayerCode: "[CLB]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "Crown Zenith: Galarian Gallery",
+      CollectrSetName: "Crown Zenith: Galarian Gallery",
+      BoosterSetName: "Crown Zenith",
+      TCGPlayerCode: "[CRZ:GG]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "Crown Zenith",
+      CollectrSetName: "Crown Zenith",
+      BoosterSetName: "Crown Zenith",
+      TCGPlayerCode: "[CRZ]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "Pokemon GO",
+      CollectrSetName: "Pokemon Go",
+      BoosterSetName: "Pokemon GO",
+      TCGPlayerCode: "[PGO]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "Shining Fates",
+      CollectrSetName: "Shining Fates",
+      BoosterSetName: "Shining Fates",
+      TCGPlayerCode: "[SHF]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "Shining Fates: Shiny Vault",
+      CollectrSetName: "Shining Fates: Shiny Vault",
+      BoosterSetName: "Shining Fates",
+      TCGPlayerCode: "[SHFSV]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH: Sword & Shield Promo Cards",
+      CollectrSetName: "Sword & Shield Promo",
+      BoosterSetName: "Sword & Shield Promo",
+      TCGPlayerCode: "[SWSD]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH01: Sword & Shield Base Set",
+      CollectrSetName: "Sword & Shield Base Set",
+      BoosterSetName: "Sword & Shield Base Set",
+      TCGPlayerCode: "[SWSH01]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH02: Rebel Clash",
+      CollectrSetName: "Rebel Clash",
+      BoosterSetName: "Rebel Clash",
+      TCGPlayerCode: "[SWSH02]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH03: Darkness Ablaze",
+      CollectrSetName: "Darkness Ablaze",
+      BoosterSetName: "Darkness Ablaze",
+      TCGPlayerCode: "[SWSH03]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH04: Vivid Voltage",
+      CollectrSetName: "Vivid Voltage",
+      BoosterSetName: "Vivid Voltage",
+      TCGPlayerCode: "[SWSH04]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH05: Battle Styles",
+      CollectrSetName: "Battle Styles",
+      BoosterSetName: "Battle Styles",
+      TCGPlayerCode: "[SWSH05]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH06: Chilling Reign",
+      CollectrSetName: "Chilling Reign",
+      BoosterSetName: "Chilling Reign",
+      TCGPlayerCode: "[SWSH06]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH07: Evolving Skies",
+      CollectrSetName: "Evolving Skies",
+      BoosterSetName: "Evolving Skies",
+      TCGPlayerCode: "[SWSH07]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH08: Fusion Strike",
+      CollectrSetName: "Fusion Strike",
+      BoosterSetName: "Fusion Strike",
+      TCGPlayerCode: "[SWSH08]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH09: Brilliant Stars Trainer Gallery",
+      CollectrSetName: "Brilliant Stars Trainer Gallery",
+      BoosterSetName: "Brilliant Stars",
+      TCGPlayerCode: "[SWSH09:TG]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH09: Brilliant Stars",
+      CollectrSetName: "Brilliant Stars",
+      BoosterSetName: "Brilliant Stars",
+      TCGPlayerCode: "[SWSH09]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH10: Astral Radiance Trainer Gallery",
+      CollectrSetName: "Astral Radiance Trainer Gallery",
+      BoosterSetName: "Astral Radiance",
+      TCGPlayerCode: "[SWSH10:TG]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH10: Astral Radiance",
+      CollectrSetName: "Astral Radiance",
+      BoosterSetName: "Astral Radiance",
+      TCGPlayerCode: "[SWSH10]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH11: Lost Origin Trainer Gallery",
+      CollectrSetName: "Lost Origin Trainer Gallery",
+      BoosterSetName: "Lost Origin",
+      TCGPlayerCode: "[SWSH11: TG]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH11: Lost Origin",
+      CollectrSetName: "Lost Origin",
+      BoosterSetName: "Lost Origin",
+      TCGPlayerCode: "[SWSH11]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH12: Silver Tempest Trainer Gallery",
+      CollectrSetName: "Silver Tempest Trainer Gallery",
+      BoosterSetName: "Silver Tempest",
+      TCGPlayerCode: "[SWSH12: TG]",
+    },
+    {
+      Era: "Sword & Shield",
+      TCGPlayerName: "SWSH12: Silver Tempest",
+      CollectrSetName: "Silver Tempest",
+      BoosterSetName: "Silver Tempest",
+      TCGPlayerCode: "[SWSH12]",
+    },
+    {
+      Era: "Scarlet & Violet",
+      TCGPlayerName: "SV: Scarlet and Violet 151",
+      CollectrSetName: "SV: 151",
+      BoosterSetName: "151",
+      TCGPlayerCode: "[MEW]",
+    },
+    {
+      Era: "Scarlet & Violet",
+      TCGPlayerName: "SV03: Obsidian Flames",
+      CollectrSetName: "Obsidian Flames",
+      BoosterSetName: "Obsidian Flames",
+      TCGPlayerCode: "[SV03]",
+    },
+    {
+      Era: "Scarlet & Violet",
+      TCGPlayerName: "SV02: Paldea Evolved",
+      CollectrSetName: "Paldea Evolved",
+      BoosterSetName: "Paldea Evolved",
+      TCGPlayerCode: "[SV02]",
+    },
+    {
+      Era: "Scarlet & Violet",
+      TCGPlayerName: "SV: Scarlet & Violet Promo Cards",
+      CollectrSetName: "Scarlet & Violet Promo",
+      BoosterSetName: "Scarlet & Violet Promo",
+      TCGPlayerCode: "[SVP]",
+    },
+    {
+      Era: "Scarlet & Violet",
+      TCGPlayerName: "SV01: Scarlet & Violet Base Set",
+      CollectrSetName: "Scarlet & Violet Base Set",
+      BoosterSetName: "Scarlet & Violet Base Set",
+      TCGPlayerCode: "[SV1]",
+    },
+  ];
+
+  static get SET_NAMES_DICTIONARY() {
+    return Collector._SET_NAMES_DICTIONARY;
+  }
 }
 
 // Exporta la clase para que pueda ser utilizada fuera de la librería
