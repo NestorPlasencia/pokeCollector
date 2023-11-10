@@ -22,19 +22,18 @@ class Collector {
     Collector._COLLECTOR_USER_ID = collector_user_id;
   }
 
-  static __COLLECTIONS_LIST = [];
+  static _COLLECTIONS_LIST = [];
 
-  static get _COLLECTIONS_LIST() {
-    return Collector.__COLLECTIONS_LIST;
-  }
-  _;
-
-  static set __COLLECTIONS_LIST(_collections_list) {
-    Collector.__COLLEC_TIONS_LIST = _collections_list;
+  static get COLLECTIONS_LIST() {
+    return Collector._COLLECTIONS_LIST;
   }
 
-  static _SET_S_LIST = [];
-  _;
+  static set COLLECTIONS_LIST(_collections_list) {
+    Collector._COLLECTIONS_LIST = _collections_list;
+  }
+
+  static _SETS_LIST = [];
+
   static get SETS_LIST() {
     return Collector._SETS_LIST;
   }
@@ -173,7 +172,7 @@ class Collector {
 
   // Carga la propiedad Collections List
   static loadCollections = async () => {
-    Collector.__COLLECTIONS_LIST = await Collector.getCollectionsList();
+    Collector._COLLECTIONS_LIST = await Collector.getCollectionsList();
   };
 
   // Trae todas las cartas de una colección
@@ -217,7 +216,7 @@ class Collector {
 
   // Obtiene el Collection Id de un Collection Name
   static getCollectionIdFromCollectionName = (collectionName) => {
-    return Collector._COLLECTIONS_LIST.find((c) => c.name == collectionName).id;
+    return Collector.COLLECTIONS_LIST.find((c) => c.name == collectionName).id;
   };
 
   // Obtiene los Collection Ids de varios Collection Names
