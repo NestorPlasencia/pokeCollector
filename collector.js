@@ -417,6 +417,17 @@ class Collector {
     );
   };
 
+  // Imprime una carta en su formato de massEntry and Price
+  static printCardMassEntryFormat = (card) => {
+    console.log(
+      `1 ${card.product_name}${Collector.convertSetName(
+        card.catalog_group,
+        "CollectrSetName",
+        "TCGPlayerCode"
+      )}`
+    );
+  };
+
   // Imprime una carta en su formato de massEntry
   static printCardsMassEntryFormat = (cards) => {
     cards.forEach((c) => Collector.printCardMassEntryFormat(c));
